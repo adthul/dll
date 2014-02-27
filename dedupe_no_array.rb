@@ -1,21 +1,65 @@
-require 'doublylinkedlist'
+class Node
+  attr_accessor :value, :cont, :prev
 
-def remove_dupes
-  current_n = head
+  def initialize(value, cont, prev)
+    @value = value
+    @cont = cont
+    @prev = prev
+  end
+end
 
-  while(!current_n.nil?) do
-    value = current_n.value
-    next_n = current_n.cont
-    check_n = current_n.cont
+class List
+  attr_reader :head
 
-    while(!check_n.nil?) do
-      if value == check_n.value
-        delete(current_n)
-        break
-      end
-      check_n = check_n.cont
+  def initialize
+    @head = nil
+    @last = nil
+  end
+
+  def add(value)
+    new_n = Node.new(value, nil, @last)
+    @head = new_n if head.nil?
+    @last.cont = new_n unless @last.nil?
+    @last = new_n
+  end
+
+  def delete(node)
+    if node == @head
+      @head = node.cont
     end
-    current_n = next_n
+
+    node.prev.cont = node.cont unless node.prev.nil?
+    node.cont.prev = node.back unless node.cont.nil?
+  end
+
+  def list_count
+    count = 0
+    node = @head
+    while !node.nil?
+      puts node.value
+      node = node.cont
+      count += 1
+    end
+    puts "List Count: #{list_count}"
+  end
+
+  def remove_dupes
+    current_n = head
+
+    while(!current_n.nil?) do
+      value = current_n.value
+      next_n = current_n.cont
+      check_n = current_n.cont
+
+      while(!check_n.nil?) do
+        if value == check_n.value
+          delete(current_n)
+          break
+        end
+        check_n = check_n.cont
+      end
+      current_n = next_n
+    end
   end
 end
 
